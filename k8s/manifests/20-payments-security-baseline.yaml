@@ -1,0 +1,19 @@
+# Rob, Monday 09:30. The OWASP API Security template, as code. action: warn is the Dashboard's
+# Deployment Warning; in the cluster it also makes kubectl print a preflight warning on apply.
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykRuleset
+metadata:
+  name: payments-security-baseline
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  name: Payments Security Baseline
+  description: OWASP API Security Top 10 baseline for every payments API.
+  active: true
+  action: warn
+  resourceType: oas-api
+  categories: [payments]
+  ruleset:
+    raw: |
+      extends:
+        - ["spectral:owasp", "all"]

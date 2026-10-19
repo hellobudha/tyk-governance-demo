@@ -1,0 +1,209 @@
+<!doctype html><html><head><meta charset="utf-8"><title>stage</title><link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--bg:#06060D;--bg2:#10101C;--panel:#161628;--line:#2A2A40;--ink:#FFFFFF;--soft:#C4C4D4;--muted:#7C7C92;--blue:#7588FB;--purple:#B669FB;--cyan:#54C7EE;--mint:#46DFB9;--pink:#FF4FA3;--amber:#F7B955;--rob:#54C7EE;--ines:#B669FB}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:816px;background:var(--bg);color:var(--ink);font-family:Roboto,Inter,sans-serif;overflow:hidden}
+.view{position:absolute;inset:0;display:none}.view.on{display:block}
+h1,h2,h3{font-family:Inter,sans-serif;margin:0}
+.eyebrow{font:800 15px/1 Inter;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:"";width:14px;height:14px;background:var(--blue)}
+/* opener */
+#open{padding:76px 96px 0;background:radial-gradient(900px 500px at 100% 0%,rgba(117,136,251,.14),transparent 60%),var(--bg)}
+#open h1{font:800 64px/1.06 Inter;letter-spacing:-.025em;margin:26px 0 18px;max-width:1500px}
+#open .sub{font:400 27px/1.4 Roboto;color:var(--soft);max-width:1200px}
+#open .graphic{position:absolute;left:96px;right:96px;top:330px}
+/* flow graphic */
+.lanes{display:grid;gap:44px}
+.lane{display:grid;grid-template-columns:290px 1fr;align-items:center;gap:36px}
+.lane .lab{font:800 15px/1.3 Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.lane .lab b{display:block;font:700 26px/1.2 Inter;letter-spacing:0;text-transform:none;color:var(--ink);margin-top:8px}
+.flow{display:flex;align-items:center;gap:0}
+.node{min-width:290px;padding:24px 28px;border:2px solid var(--line);background:var(--bg2);font:500 24px/1.3 Roboto;color:var(--ink)}
+.node small{display:block;font:400 18px/1.3 Roboto;color:var(--muted);margin-top:6px}
+.node.bad{border-color:var(--pink)}.node.bad small{color:var(--pink)}
+.node.good{border-color:var(--mint)}.node.good small{color:var(--mint)}
+.node.hi{border-color:var(--blue);background:rgba(117,136,251,.12)}
+.arrow{width:86px;height:2px;background:var(--line);position:relative;flex:none}
+.arrow::after{content:"";position:absolute;right:-2px;top:-6px;border:7px solid transparent;border-left:10px solid var(--line)}
+.arrow.bad{background:var(--pink)}.arrow.bad::after{border-left-color:var(--pink)}
+.arrow.good{background:var(--mint)}.arrow.good::after{border-left-color:var(--mint)}
+.arrow.cut::before{content:"✕";position:absolute;left:30px;top:-20px;color:var(--pink);font:800 26px Inter}
+/* stats graphic */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:56px;margin-top:40px}
+.stat{border-top:3px solid var(--blue);padding-top:22px}
+.stat.pink{border-top-color:var(--pink)}.stat.mint{border-top-color:var(--mint)}.stat.cyan{border-top-color:var(--cyan)}
+.stat .n{font:800 120px/1 Inter;letter-spacing:-.04em}
+.stat .n small{font:600 44px/1 Inter;color:var(--soft);margin-left:8px;letter-spacing:0}
+.stat .l{font:400 26px/1.35 Roboto;color:var(--soft);margin-top:16px;max-width:480px}
+/* cast */
+.cast{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:20px}
+.person{display:grid;grid-template-columns:120px 1fr;gap:30px;align-items:start}
+.person .av{width:120px;height:120px;display:grid;place-items:center;font:800 42px Inter;color:var(--bg)}
+.person h3{font:700 38px/1.1 Inter;letter-spacing:-.01em}
+.person .role{font:400 22px Roboto;color:var(--muted);margin:8px 0 20px}
+.person ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.person li{font:400 24px/1.4 Roboto;color:var(--soft);padding-left:24px;position:relative}
+.person li::before{content:"";position:absolute;left:0;top:13px;width:10px;height:10px}
+.person.ines .av,.person.ines li::before{background:var(--ines)}
+.person.rob .av,.person.rob li::before{background:var(--rob)}
+/* statement */
+#quote{padding:130px 96px 0}
+#quote .q{font:600 60px/1.15 Inter;letter-spacing:-.02em;max-width:1560px;margin:34px 0 38px}
+#quote .by{display:flex;align-items:center;gap:16px;font:500 22px Roboto;color:var(--soft)}
+#quote .by i{width:44px;height:44px;display:inline-grid;place-items:center;font:800 17px Inter;color:var(--bg)}
+#quote .note{position:absolute;left:96px;bottom:70px;max-width:1300px;border-left:3px solid var(--pink);padding-left:24px;font:400 25px/1.4 Roboto;color:var(--soft)}
+#quote .note b{display:block;font:800 13px/1 Inter;letter-spacing:.2em;color:var(--pink);margin-bottom:10px}
+/* timeline recap */
+#week{padding:90px 96px 0}
+#week h1{font:800 58px/1.06 Inter;letter-spacing:-.02em;margin:26px 0 90px}
+.tl{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:40px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:10px;height:2px;background:var(--line)}
+.day{position:relative;padding-top:56px}
+.day::before{content:"";position:absolute;left:0;top:0;width:22px;height:22px;background:var(--blue)}
+.day.ines::before{background:var(--ines)}.day.rob::before{background:var(--rob)}.day.mint::before{background:var(--mint)}
+.day .d{font:800 15px/1 Inter;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.day h3{font:700 31px/1.15 Inter;margin:14px 0 14px;letter-spacing:-.01em}
+.day p{font:400 23px/1.4 Roboto;color:var(--soft);margin:0}
+
+/* slate: day slides in, clock ticks */
+#slate{background:radial-gradient(1100px 600px at 20% 110%,rgba(117,136,251,.18),transparent 60%),var(--bg)}
+#slate .s-eyebrow{position:absolute;left:96px;top:84px;animation:fadeIn .6s ease both}
+#slate .s-day{position:absolute;left:96px;top:200px;font:800 176px/1 Inter;letter-spacing:-.035em;color:var(--ink);animation:slideIn .9s cubic-bezier(.2,.8,.2,1) both}
+#slate .s-clock{position:absolute;right:96px;top:232px;font:500 128px/1 "Roboto Mono",monospace;color:var(--blue);font-variant-numeric:tabular-nums;animation:fadeIn .7s .35s ease both}
+#slate .s-clock small{display:block;font:800 15px/1 Inter;letter-spacing:.2em;color:var(--muted);margin-bottom:18px;text-align:right}
+#slate .s-who{position:absolute;left:96px;bottom:170px;display:flex;align-items:center;gap:22px;animation:slideIn .8s .6s cubic-bezier(.2,.8,.2,1) both}
+#slate .s-who i{width:76px;height:76px;display:grid;place-items:center;font:800 28px Inter;color:var(--bg)}
+#slate .s-who b{display:block;font:700 36px/1.1 Inter;letter-spacing:-.01em}
+#slate .s-who span{display:block;font:400 22px Roboto;color:var(--muted);margin-top:6px}
+#slate .s-line{position:absolute;left:96px;right:96px;bottom:92px;font:400 30px/1.35 Roboto;color:var(--soft);animation:fadeIn .8s 1s ease both;border-top:1px solid var(--line);padding-top:26px}
+@keyframes slideIn{from{opacity:0;transform:translateX(-80px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* problem slide */
+#problem{padding:84px 96px 0}
+#problem .blk{max-width:1540px;animation:fadeIn .7s ease both}
+#problem .blk.two{margin-top:54px;animation-delay:.5s}
+#problem .eyebrow.pink{color:var(--pink)}#problem .eyebrow.pink::before{background:var(--pink)}
+#problem .eyebrow.mint{color:var(--mint)}#problem .eyebrow.mint::before{background:var(--mint)}
+#problem .big{font:600 50px/1.18 Inter;letter-spacing:-.02em;margin-top:22px}
+#problem .mid{font:400 32px/1.4 Roboto;color:var(--soft);margin-top:20px}
+#problem .p-who{position:absolute;left:96px;bottom:84px;display:flex;align-items:center;gap:18px;animation:fadeIn .7s .9s ease both}
+#problem .p-who i{width:56px;height:56px;display:grid;place-items:center;font:800 22px Inter;color:var(--bg)}
+#problem .p-who b{font:700 26px Inter}#problem .p-who span{font:400 20px Roboto;color:var(--muted);margin-left:14px}
+/* windows */
+.win{position:absolute;left:40px;right:40px;top:28px;bottom:28px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.bar{height:44px;background:var(--panel);display:flex;align-items:center;gap:10px;padding:0 18px;color:var(--muted);font:500 15px Roboto;flex:none;border-bottom:1px solid var(--line)}
+.bar i{width:12px;height:12px;border-radius:50%;display:inline-block;background:var(--line)}
+.bar .t{margin-left:12px;font-family:"Roboto Mono",monospace}
+.body{flex:1;overflow:hidden;padding:22px 28px;font-family:"Roboto Mono",monospace;line-height:1.5;position:relative}
+.body pre{margin:0;white-space:pre}
+#term .body pre{white-space:pre-wrap;word-break:break-word}
+.ln{display:block;padding:0 10px;border-left:4px solid transparent}
+.ln.hl{background:rgba(117,136,251,.16);border-left-color:var(--blue)}
+.prompt{color:var(--mint)}.path{color:var(--cyan)}.cmd{color:#fff}
+.caret{display:inline-block;width:.6em;height:1.1em;background:var(--blue);vertical-align:-.15em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.c-ok{color:var(--mint);font-weight:700}.c-err{color:var(--pink);font-weight:700}.c-warn{color:var(--amber);font-weight:700}.c-dim{color:var(--muted)}
+.code pre{white-space:normal}.code .ln{display:grid;grid-template-columns:3.2em 1fr;column-gap:1.1em}.code .num{color:#4A4A66;text-align:right;user-select:none}.code .cd{white-space:pre-wrap;word-break:break-word}
+.k{color:var(--blue)}.s{color:var(--mint)}.n{color:var(--purple)}.cm{color:var(--muted);font-style:italic}
+</style></head><body>
+<div id="slate" class="view"><div class="eyebrow s-eyebrow"></div><div class="s-day"></div><div class="s-clock"><small>STORY TIME</small><span></span></div><div class="s-who"><i></i><div><b></b><span></span></div></div><div class="s-line"></div></div>
+<div id="problem" class="view"><div class="blk one"><div class="eyebrow pink">The problem</div><div class="big"></div></div><div class="blk two"><div class="eyebrow mint">What this part shows</div><div class="mid"></div></div><div class="p-who"><i></i><b></b><span></span></div></div>
+<div id="open" class="view"><div class="eyebrow"></div><h1></h1><div class="sub"></div><div class="graphic"></div></div>
+<div id="quote" class="view"><div class="eyebrow"></div><div class="q"></div><div class="by"><i></i><span></span></div><div class="note"><b></b><span></span></div></div>
+<div id="week" class="view"><div class="eyebrow"></div><h1></h1><div class="tl"></div></div>
+<div id="term" class="view"><div class="win"><div class="bar"><i></i><i></i><i></i><span class="t"></span></div><div class="body"><pre></pre></div></div></div>
+<div id="file" class="view"><div class="win"><div class="bar"><i></i><i></i><i></i><span class="t"></span></div><div class="body code"><pre></pre></div></div></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function show(id){ document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === id)); }
+const flowHtml = f => `<div class="flow">${f.map((n, i) => (typeof n === 'string' ? `<span class="arrow ${n}"></span>` : `<div class="node ${n.c || ''}">${esc(n.t)}${n.s ? `<small>${esc(n.s)}</small>` : ''}</div>`)).join('')}</div>`;
+const GRAPHICS = {
+  flow: g => `<div class="lanes">${g.lanes.map(l => `<div class="lane"><div class="lab">${esc(l.lab)}<b>${esc(l.title || '')}</b></div>${flowHtml(l.flow)}</div>`).join('')}</div>`,
+  stats: g => `<div class="stats">${g.items.map(s => `<div class="stat ${s.c || ''}"><div class="n">${esc(s.n)}${s.u ? `<small>${esc(s.u)}</small>` : ''}</div><div class="l">${esc(s.l)}</div></div>`).join('')}</div>`,
+  cast: g => `<div class="cast">${g.people.map(p => `<div class="person ${p.k}"><div class="av">${esc(p.av)}</div><div><h3>${esc(p.name)}</h3><div class="role">${esc(p.role)}</div><ul>${p.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div></div>`).join('')}</div>`,
+};
+const TOK = /(non_compliant|Non-compliant|non-compliant|Error from server \(Forbidden\)|governance preflight blocked this API[^:]*|pipeline FAILS|Result: non-compliant\.|Failed|blocked|Warning: preflight warned: \d+ error\(s\), \d+ warning\(s\)|warned|Result: compliant\.|pipeline continues|passed|Successful|compliant|skipped|\bblock\b|\bwarn\b|\bnone\b)/g;
+function colorize(line){
+  return esc(line).replace(TOK, m => {
+    if (/^(non_compliant|Non-compliant|non-compliant|Error from server|governance preflight blocked|pipeline FAILS|Result: non-compliant|Failed|blocked|block)/.test(m)) return `<span class="c-err">${m}</span>`;
+    if (/^(Warning|warned|warn)/.test(m)) return `<span class="c-warn">${m}</span>`;
+    if (/^(skipped|none)/.test(m)) return `<span class="c-dim">${m}</span>`;
+    return `<span class="c-ok">${m}</span>`;
+  });
+}
+const T = { lines: [], who: 'rob', cwd: '~/tyk-governance-demo/k8s', wrap: false };
+function fit(el, lines, max, min){
+  const w = el.clientWidth - 70; const cand = lines.filter(l => l.length <= 175);
+  const longest = Math.max(40, ...cand.map(l => l.length));
+  let f = Math.min(max, w / (0.6 * longest)); f = Math.max(min, f); el.style.fontSize = f + 'px'; return f;
+}
+function renderTerm(){
+  const body = $('#term .body'); const pre = $('#term pre');
+  pre.innerHTML = T.lines.map(l => l.html !== undefined ? `<span class="ln${l.hl?' hl':''}">${l.html}</span>` : `<span class="ln${l.hl?' hl':''}">${colorize(l.text)}</span>`).join('');
+  fit(body, T.lines.map(l => l.text || ''), 25, 13);
+  const hl = pre.querySelector('.ln.hl');
+  if (hl) { body.scrollTop = Math.max(0, hl.offsetTop - body.clientHeight / 2 + 40); } else body.scrollTop = body.scrollHeight;
+}
+function promptText(){ return `${T.who === 'ines' ? 'ines' : 'rob'}@kestrel ${T.cwd} $ `; }
+function promptHtml(cmd, caret){ const user = T.who === 'ines' ? 'ines' : 'rob';
+  return `<span class="prompt">${user}@kestrel</span> <span class="path">${T.cwd}</span> <span class="c-dim">$</span> <span class="cmd">${esc(cmd)}</span>${caret?'<span class="caret"></span>':''}`; }
+window.stage = {
+  opener(o){ show('open'); $('#open .eyebrow').textContent = o.eyebrow; $('#open h1').textContent = o.title; $('#open .sub').textContent = o.sub || '';
+    const g = $('#open .graphic'); g.innerHTML = o.graphic ? GRAPHICS[o.graphic.type](o.graphic) : ''; },
+  quote(o){ show('quote'); $('#quote .eyebrow').textContent = o.eyebrow; $('#quote .q').textContent = o.text;
+    const col = { ines: 'var(--ines)', rob: 'var(--rob)', both: 'var(--blue)' }[o.who || 'both']; $('#quote .by i').style.background = col; $('#quote .by i').textContent = o.av || '';
+    $('#quote .by span').textContent = o.by || ''; $('#quote .by').style.display = o.by ? 'flex' : 'none';
+    $('#quote .note').style.display = o.note ? 'block' : 'none'; $('#quote .note b').textContent = o.noteLabel || ''; $('#quote .note span').textContent = o.note || ''; },
+  week(o){ show('week'); $('#week .eyebrow').textContent = o.eyebrow; $('#week h1').textContent = o.title;
+    $('#week .tl').innerHTML = o.days.map(d => `<div class="day ${d.k || ''}"><div class="d">${esc(d.d)}</div><h3>${esc(d.h)}</h3><p>${esc(d.p)}</p></div>`).join(''); },
+  term(o = {}){ show('term'); T.who = o.who || 'rob'; T.lines = []; $('#term .t').textContent = `${T.who === 'ines' ? 'ines' : 'rob'}@kestrel — ${o.label || 'kubectl · context kind-kestrel'}`; renderTerm(); },
+  async type(cmd){ const n = cmd.length; const step = Math.max(10, Math.min(45, 2600 / n));
+    T.lines.push({ text: '', html: promptHtml('', true) }); const i = T.lines.length - 1;
+    for (let k = 1; k <= n; k++) { T.lines[i] = { text: promptText() + cmd + '  ', html: promptHtml(cmd.slice(0, k), true) }; renderTerm(); await new Promise(r => setTimeout(r, step)); }
+    T.lines[i] = { text: promptText() + cmd + '  ', html: promptHtml(cmd, false) }; renderTerm(); },
+  out(text){ const ls = text.replace(/\s+$/,'').split('\n'); for (const l of ls) T.lines.push({ text: l }); renderTerm(); },
+  hl(patterns){ const res = (patterns || []).map(p => new RegExp(p)); T.lines.forEach(l => { l.hl = !!(l.text && res.some(r => r.test(l.text))); }); renderTerm(); },
+  file(o){ show('file'); $('#file .t').textContent = o.path; F.lines = o.content.replace(/\s+$/,'').split('\n'); F.lang = o.lang; renderFile(o.hl || []); },
+  fileHl(subs){ renderFile(subs); },
+};
+
+const WHO = { ines: ['IF', 'Ines Ferreira', 'Backend engineer · Payments squad', 'var(--ines)'], rob: ['RW', 'Rob Whitfield', 'API platform lead', 'var(--rob)'], both: ['K', 'Kestrel Charging', 'Platform and Payments squad', 'var(--blue)'] };
+let clockTimer = null;
+function restartAnim(el){ el.querySelectorAll('*').forEach(e => { e.style.animation = 'none'; void e.offsetWidth; e.style.animation = ''; }); }
+window.stage.slate = o => {
+  show('slate'); const v = $('#slate'); const w = WHO[o.who || 'both'];
+  $('#slate .s-eyebrow').textContent = o.eyebrow || ''; $('#slate .s-day').textContent = o.day; $('#slate .s-line').textContent = o.line || '';
+  $('#slate .s-who i').style.background = w[3]; $('#slate .s-who i').textContent = w[0]; $('#slate .s-who b').textContent = w[1]; $('#slate .s-who span').textContent = w[2];
+  const [hh, mm] = o.time.split(':').map(Number); let t = hh * 3600 + mm * 60 - 2; const fmt = x => [Math.floor(x / 3600), Math.floor(x % 3600 / 60), x % 60].map(n => String(n).padStart(2, '0')).join(':');
+  const c = $('#slate .s-clock span'); c.textContent = fmt(t); if (clockTimer) clearInterval(clockTimer);
+  let n = 0; clockTimer = setInterval(() => { t++; n++; c.textContent = fmt(t); if (n >= 4) clearInterval(clockTimer); }, 1000);
+  restartAnim(v);
+};
+window.stage.problem = o => {
+  show('problem'); const v = $('#problem'); const w = WHO[o.who || 'both'];
+  $('#problem .big').textContent = o.problem; $('#problem .mid').textContent = o.shows;
+  $('#problem .p-who i').style.background = w[3]; $('#problem .p-who i').textContent = w[0]; $('#problem .p-who b').textContent = w[1]; $('#problem .p-who span').textContent = w[2];
+  restartAnim(v);
+};
+const F = { lines: [], lang: 'yaml' };
+const strs = t => esc(t).replace(/"[^"]*"/g, x => `<span class="s">${x}</span>`);
+const isComment = (l, lang) => (lang === 'yaml' || lang === 'bash') && /^\s*#/.test(l);
+function hiCode(l, lang){
+  if (isComment(l, lang)) return `<span class="cm">${esc(l)}</span>`;
+  if (lang === 'yaml') { const m = l.match(/^(\s*-?\s*)([A-Za-z0-9_.\-]+)(:)(.*)$/); return m ? esc(m[1]) + `<span class="k">${esc(m[2])}</span>:` + strs(m[4]) : strs(l); }
+  if (lang === 'json') { const m = l.match(/^(\s*)("(?:[^"\\]|\\.)*")(\s*:)(.*)$/);
+    const val = t => esc(t).replace(/"(?:[^"\\]|\\.)*"|\b(?:true|false|null)\b|-?\b\d+(?:\.\d+)?\b/g, x => x.startsWith('"') ? `<span class="s">${x}</span>` : `<span class="n">${x}</span>`);
+    return m ? esc(m[1]) + `<span class="k">${esc(m[2])}</span>${esc(m[3])}` + val(m[4]) : val(l); }
+  if (lang === 'bash') return strs(l);
+  return esc(l);
+}
+function renderFile(subs){
+  const body = $('#file .body'); const pre = $('#file pre');
+  const hlIdx = new Set(); subs.forEach(s => { const m = typeof s === 'number' ? [s - 1] : F.lines.map((l, i) => l.includes(s) && !isComment(l, F.lang) ? i : -1).filter(i => i >= 0); m.forEach(i => hlIdx.add(i)); });
+  pre.innerHTML = F.lines.map((l, i) => `<span class="ln${hlIdx.has(i) ? ' hl' : ''}"><span class="num">${i + 1}</span><span class="cd">${hiCode(l, F.lang) || ' '}</span></span>`).join('');
+  body.style.fontSize = '22px';
+  const first = pre.querySelector('.ln.hl');
+  if (first) { const last = [...pre.querySelectorAll('.ln.hl')].pop(); const mid = (first.offsetTop + last.offsetTop + last.offsetHeight) / 2; body.scrollTo({ top: Math.max(0, mid - body.clientHeight / 2), behavior: 'smooth' }); } else body.scrollTop = 0;
+}
+</script></body></html>

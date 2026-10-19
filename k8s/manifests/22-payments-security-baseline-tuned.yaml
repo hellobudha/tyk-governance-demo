@@ -1,0 +1,21 @@
+# Rob, Tuesday 11:20. Same ruleset, one rule overridden: TLS terminates at Kestrel's edge, and the
+# Dashboard adds the gateway's own http:// URL to every API's servers list. Warn, not off.
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykRuleset
+metadata:
+  name: payments-security-baseline
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  name: Payments Security Baseline
+  description: OWASP API Security Top 10 baseline for every payments API.
+  active: true
+  action: warn
+  resourceType: oas-api
+  categories: [payments]
+  ruleset:
+    raw: |
+      extends:
+        - ["spectral:owasp", "all"]
+      rules:
+        owasp-security-hosts-https-oas3: warn

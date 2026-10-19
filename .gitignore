@@ -1,0 +1,6 @@
+.DS_Store
+*.bak*
+node_modules/
+k8s/recording/browsers/
+k8s/recording/tmp/
+k8s/recording/state.json

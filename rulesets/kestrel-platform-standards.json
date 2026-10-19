@@ -1,0 +1,69 @@
+{
+  "description": "Kestrel Charging platform standards for every API published through Tyk. Checks the Tyk gateway configuration (x-tyk-api-gateway) as well as the OpenAPI document.",
+  "rules": {
+    "kestrel-auth-configured": {
+      "description": "Every API must declare an authentication scheme in its Tyk gateway configuration",
+      "message": "No authentication configured under x-tyk-api-gateway.server. Keyless APIs are not allowed at Kestrel since the March tariff-API incident.",
+      "severity": "error",
+      "given": "$['x-tyk-api-gateway'].server",
+      "then": { "field": "authentication", "function": "truthy" },
+      "howToFix": "In the API Designer open Settings > Authentication, switch from Keyless to an authentication method such as Auth Token (API key), JWT or OAuth, then save."
+    },
+    "kestrel-auth-enabled": {
+      "description": "The configured authentication scheme must be enabled",
+      "message": "Authentication is configured but disabled (x-tyk-api-gateway.server.authentication.enabled is not true).",
+      "severity": "error",
+      "given": "$['x-tyk-api-gateway'].server.authentication",
+      "then": { "field": "enabled", "function": "truthy" },
+      "howToFix": "Set x-tyk-api-gateway.server.authentication.enabled to true, or enable the authentication method in Settings > Authentication."
+    },
+    "kestrel-upstream-rate-limit": {
+      "description": "Every API must protect its upstream with a rate limit",
+      "message": "No rate limit configured under x-tyk-api-gateway.upstream.rateLimit.",
+      "severity": "error",
+      "given": "$['x-tyk-api-gateway'].upstream",
+      "then": { "field": "rateLimit", "function": "truthy" },
+      "howToFix": "In the API Designer open Settings > Upstream > Rate Limit and enable it, for example 100 requests per 60 seconds. This protects the upstream from abuse regardless of consumer keys."
+    },
+    "kestrel-upstream-rate-limit-enabled": {
+      "description": "The upstream rate limit must be switched on",
+      "message": "x-tyk-api-gateway.upstream.rateLimit exists but is not enabled.",
+      "severity": "error",
+      "given": "$['x-tyk-api-gateway'].upstream.rateLimit",
+      "then": { "field": "enabled", "function": "truthy" },
+      "howToFix": "Enable the upstream rate limit in Settings > Upstream > Rate Limit."
+    },
+    "kestrel-operation-id": {
+      "description": "Every operation must have an operationId so it can be referenced from SDKs, the partner portal and MCP tool mappings",
+      "message": "Operation is missing an operationId.",
+      "severity": "error",
+      "given": "$.paths[*][get,put,post,delete,options,head,patch,trace]",
+      "then": { "field": "operationId", "function": "truthy" },
+      "howToFix": "Add a unique, camelCase operationId to the operation (for example listPayments, createPayment). Tyk uses it as the endpoint name and as the MCP tool name when the API is exposed to AI agents."
+    },
+    "kestrel-operation-description": {
+      "description": "Every operation should have a description",
+      "message": "Operation has no description.",
+      "severity": "warn",
+      "given": "$.paths[*][get,put,post,delete,options,head,patch,trace]",
+      "then": { "field": "description", "function": "truthy" },
+      "howToFix": "Add a one or two sentence description explaining what the operation does and when to call it."
+    },
+    "kestrel-info-contact": {
+      "description": "Every API must name an owning squad",
+      "message": "info.contact is missing. Every Kestrel API needs an owner.",
+      "severity": "warn",
+      "given": "$.info",
+      "then": { "field": "contact", "function": "truthy" },
+      "howToFix": "Add info.contact with the owning squad's name and email, for example { \"name\": \"Payments Squad\", \"email\": \"payments-squad@kestrelcharging.example\" }."
+    },
+    "kestrel-semantic-version": {
+      "description": "API versions must follow semantic versioning (MAJOR.MINOR.PATCH)",
+      "message": "info.version is not a semantic version.",
+      "severity": "warn",
+      "given": "$.info.version",
+      "then": { "function": "pattern", "functionOptions": { "match": "^[0-9]+\\.[0-9]+\\.[0-9]+$" } },
+      "howToFix": "Use a three-part semantic version such as 1.0.0."
+    }
+  }
+}

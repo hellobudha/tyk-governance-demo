@@ -1,0 +1,21 @@
+# Rob, Monday 09:45. The March incident written down. The Spectral rules come from
+# rulesets/kestrel-platform-standards.json via a ConfigMap (scripts/seed.sh creates it), so the
+# same file serves the Dashboard import, the CI check and the cluster. action: none = visibility only.
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykRuleset
+metadata:
+  name: kestrel-platform-standards
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  name: Kestrel Platform Standards
+  description: "Kestrel Charging platform standards: authentication and upstream rate limiting on every API, operationIds, descriptions, ownership and semantic versions."
+  active: true
+  action: none
+  resourceType: oas-api
+  categories: [payments, internal]
+  ruleset:
+    objRef:
+      kind: ConfigMap
+      name: kestrel-platform-standards
+      keyName: ruleset.json

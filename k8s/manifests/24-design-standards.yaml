@@ -1,0 +1,20 @@
+# Rob, Thursday. Raise the bar on API design for the internal estate with the OpenAPI Best Practices
+# template. action: none = visibility only. The payments squad previews it with the Dashboard's
+# Test ruleset panel before anyone opts in (Act 7).
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykRuleset
+metadata:
+  name: design-standards
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  name: Design Standards
+  description: OpenAPI best practices for every internal API.
+  active: true
+  action: none
+  resourceType: oas-api
+  categories: [internal]
+  ruleset:
+    raw: |
+      extends:
+        - ["spectral:oas", "recommended"]

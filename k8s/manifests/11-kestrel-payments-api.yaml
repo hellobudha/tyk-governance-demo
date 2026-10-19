@@ -1,0 +1,17 @@
+# Ines's API. The OAS document lives in a revisioned ConfigMap (kestrel-payments-api-<rev>) that
+# scripts/ines-push.sh creates from apis/*.json, the way kustomize's configMapGenerator would.
+# A new spec revision means a new ConfigMap and an update to this object, so every push goes
+# through the Operator's governance admission webhook. REV is substituted by the scripts.
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykOasApiDefinition
+metadata:
+  name: kestrel-payments-api
+  namespace: tyk
+  labels: {demo: kestrel-governance, squad: payments}
+spec:
+  categories: [payments]
+  tykOAS:
+    configmapRef:
+      namespace: tyk
+      name: kestrel-payments-api-REV
+      keyName: payments-api.json

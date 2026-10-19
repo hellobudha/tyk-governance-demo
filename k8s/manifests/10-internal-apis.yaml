@@ -1,0 +1,118 @@
+# Kestrel's existing internal estate, as the platform team already manages it: two Tyk OAS APIs
+# owned by the Operator, both tagged "internal". Deliberately imperfect so Rob's house rules have
+# something to say about them.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kestrel-tariffs-api
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+data:
+  tariffs-api.json: |
+    {
+      "openapi": "3.0.3",
+      "info": {
+        "title": "Kestrel Tariffs API",
+        "version": "2.1.0",
+        "description": "Current charging tariffs per site. Published keyless until March 2026; authentication was added after the incident."
+      },
+      "servers": [{"url": "https://api.kestrelcharging.example/tariffs/"}],
+      "security": [{"authToken": []}],
+      "paths": {
+        "/tariffs": {
+          "get": {
+            "operationId": "listTariffs",
+            "summary": "List tariffs",
+            "description": "Returns the current tariff for every site.",
+            "responses": {"200": {"description": "Current tariffs"}}
+          }
+        }
+      },
+      "components": {
+        "securitySchemes": {"authToken": {"type": "apiKey", "in": "header", "name": "Authorization"}}
+      },
+      "x-tyk-api-gateway": {
+        "info": {"name": "Kestrel Tariffs API", "state": {"active": true}},
+        "server": {
+          "listenPath": {"value": "/tariffs/", "strip": true},
+          "authentication": {"enabled": true, "securitySchemes": {"authToken": {"enabled": true}}}
+        },
+        "upstream": {"url": "https://httpbin.org/anything/tariffs"}
+      }
+    }
+---
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykOasApiDefinition
+metadata:
+  name: kestrel-tariffs-api
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  categories: [internal]
+  tykOAS:
+    configmapRef:
+      namespace: tyk
+      name: kestrel-tariffs-api
+      keyName: tariffs-api.json
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kestrel-charge-points-api
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+data:
+  charge-points-api.json: |
+    {
+      "openapi": "3.0.3",
+      "info": {
+        "title": "Kestrel Charge Points API",
+        "version": "3.0.0",
+        "description": "Location, connector type and live availability of every charge point on the network."
+      },
+      "servers": [{"url": "https://api.kestrelcharging.example/charge-points/"}],
+      "security": [{"authToken": []}],
+      "paths": {
+        "/charge-points": {
+          "get": {
+            "summary": "List charge points",
+            "responses": {"200": {"description": "Charge points"}}
+          }
+        },
+        "/charge-points/{id}/availability": {
+          "get": {
+            "summary": "Live availability for a charge point",
+            "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string", "maxLength": 32}}],
+            "responses": {"200": {"description": "Availability"}}
+          }
+        }
+      },
+      "components": {
+        "securitySchemes": {"authToken": {"type": "apiKey", "in": "header", "name": "Authorization"}}
+      },
+      "x-tyk-api-gateway": {
+        "info": {"name": "Kestrel Charge Points API", "state": {"active": true}},
+        "server": {
+          "listenPath": {"value": "/charge-points/", "strip": true},
+          "authentication": {"enabled": true, "securitySchemes": {"authToken": {"enabled": true}}}
+        },
+        "upstream": {
+          "url": "https://httpbin.org/anything/charge-points",
+          "rateLimit": {"enabled": true, "rate": 500, "per": "60s"}
+        }
+      }
+    }
+---
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykOasApiDefinition
+metadata:
+  name: kestrel-charge-points-api
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  categories: [internal]
+  tykOAS:
+    configmapRef:
+      namespace: tyk
+      name: kestrel-charge-points-api
+      keyName: charge-points-api.json

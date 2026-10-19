@@ -1,0 +1,22 @@
+# Rob, Thursday. The one place governance can hard-block: action: block makes the Operator's
+# admission webhook deny any TykOasApiDefinition create or update with Error-level findings.
+# Stored as "warn" in the Dashboard so UI and CI behaviour are unchanged.
+apiVersion: tyk.tyk.io/v1alpha1
+kind: TykRuleset
+metadata:
+  name: payments-security-baseline
+  namespace: tyk
+  labels: {demo: kestrel-governance}
+spec:
+  name: Payments Security Baseline
+  description: OWASP API Security Top 10 baseline for every payments API.
+  active: true
+  action: block
+  resourceType: oas-api
+  categories: [payments]
+  ruleset:
+    raw: |
+      extends:
+        - ["spectral:owasp", "all"]
+      rules:
+        owasp-security-hosts-https-oas3: warn

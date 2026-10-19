@@ -1,0 +1,15 @@
+# kind cluster for the Kestrel governance demo.
+# Host ports 3100 (Dashboard) and 8180 (Gateway) map to the NodePorts that scripts/up.sh pins,
+# so the demo can run next to tyk-demo (which uses 3000 and 8080).
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kestrel
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30300
+        hostPort: 3100
+        protocol: TCP
+      - containerPort: 30808
+        hostPort: 8180
+        protocol: TCP

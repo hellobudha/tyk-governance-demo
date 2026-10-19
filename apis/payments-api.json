@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Kestrel Payments API",
+    "version": "1.0",
+    "description": "Takes card payments for charging sessions on the Kestrel Charging network."
+  },
+  "servers": [
+    { "url": "http://tyk-gateway.localhost:8080/payments/" }
+  ],
+  "paths": {
+    "/payments": {
+      "get": {
+        "summary": "List payments",
+        "responses": {
+          "200": {
+            "description": "A list of payments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Payment" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a payment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NewPayment" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Payment" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/{paymentId}": {
+      "get": {
+        "summary": "Get a payment",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Payment" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewPayment": {
+        "type": "object",
+        "properties": {
+          "amount": { "type": "integer" },
+          "currency": { "type": "string" },
+          "cardToken": { "type": "string" }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "amount": { "type": "integer" },
+          "currency": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    }
+  },
+  "x-tyk-api-gateway": {
+    "info": {
+      "id": "kestrel-payments-api",
+      "name": "Kestrel Payments API",
+      "state": { "active": true }
+    },
+    "server": {
+      "listenPath": { "value": "/payments/", "strip": true }
+    },
+    "upstream": {
+      "url": "http://httpbin/anything/payments"
+    }
+  }
+}

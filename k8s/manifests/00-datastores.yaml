@@ -1,0 +1,97 @@
+# Minimal Redis and PostgreSQL for the Dashboard and Gateway. Demo only.
+# Postgres keeps its data on a PersistentVolumeClaim (kind's default local-path StorageClass), so the
+# org, admin user and Operator credentials survive a Docker Desktop or kind node restart. Redis is
+# persisted for the same reason (see the comment on its container).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tyk
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tyk-redis
+  namespace: tyk
+  labels: {app: tyk-redis}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: tyk-redis}}
+  template:
+    metadata: {labels: {app: tyk-redis}}
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.4-alpine
+          # Append-only file on a volume: the Dashboard keeps user API key sessions in Redis, so an
+          # empty Redis after a node restart turns every API key (including the Operator's) into a 401.
+          args: ["--appendonly", "yes", "--dir", "/data"]
+          ports: [{containerPort: 6379}]
+          volumeMounts:
+            - {name: data, mountPath: /data}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: tyk-redis-data}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tyk-redis-data
+  namespace: tyk
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 256Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tyk-redis
+  namespace: tyk
+spec:
+  selector: {app: tyk-redis}
+  ports: [{port: 6379, targetPort: 6379}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tyk-postgres
+  namespace: tyk
+  labels: {app: tyk-postgres}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: tyk-postgres}}
+  template:
+    metadata: {labels: {app: tyk-postgres}}
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          env:
+            - {name: POSTGRES_DB, value: tyk_analytics}
+            - {name: POSTGRES_PASSWORD, value: tyk}
+          ports: [{containerPort: 5432}]
+          readinessProbe:
+            exec: {command: ["pg_isready", "-U", "postgres"]}
+            periodSeconds: 3
+          volumeMounts:
+            - {name: data, mountPath: /var/lib/postgresql/data, subPath: pgdata}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: tyk-postgres-data}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tyk-postgres-data
+  namespace: tyk
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 1Gi}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tyk-postgres
+  namespace: tyk
+spec:
+  selector: {app: tyk-postgres}
+  ports: [{port: 5432, targetPort: 5432}]

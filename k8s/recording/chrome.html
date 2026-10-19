@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--bg:#06060D;--bg2:#10101C;--line:#2A2A40;--ink:#FFFFFF;--soft:#C4C4D4;--muted:#7C7C92;--blue:#7588FB;--purple:#B669FB;--cyan:#54C7EE;--mint:#46DFB9;--pink:#FF4FA3}
+*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;background:transparent;overflow:hidden;font-family:Inter,Roboto,sans-serif}
+#top{position:absolute;left:0;top:0;width:1920px;height:64px;background:var(--bg);display:flex;align-items:center;padding:0 40px;gap:26px}
+#top .day{font:800 15px/1 Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+#top .time{font:500 20px/1 "Roboto Mono",monospace;color:var(--ink);padding-left:16px;border-left:1px solid var(--line)}
+#top .title{font:600 21px/1 Inter;color:var(--ink);padding-left:16px;border-left:1px solid var(--line);letter-spacing:-.005em}
+#top .who{margin-left:auto;margin-right:230px;display:flex;align-items:center;gap:10px;font:500 15px/1 Roboto;color:var(--soft)}
+#top .who i{width:12px;height:12px;border-radius:3px;display:inline-block}
+#top .elapsed{position:absolute;right:40px;top:0;height:64px;display:flex;align-items:center;gap:12px;font:700 11px/1 Inter;letter-spacing:.18em;color:var(--muted)}
+#top .elapsed span{width:84px}
+#prog{position:absolute;left:0;top:64px;width:1920px;height:4px;display:flex;gap:3px;background:var(--bg)}
+#prog i{flex:1;background:var(--line)}#prog i.on{background:var(--blue)}#prog i.cur{background:linear-gradient(90deg,var(--blue),var(--purple))}
+#foot{position:absolute;left:0;top:880px;width:1920px;height:200px;background:var(--bg);border-top:1px solid var(--line);padding:22px 40px 0;display:flex;gap:40px}
+#foot .step{width:330px;flex:none;padding-top:4px}
+#foot .step .n{font:800 13px/1 Inter;letter-spacing:.2em;color:var(--blue);text-transform:uppercase;margin-bottom:10px}
+#foot .step .s{font:600 23px/1.25 Inter;color:var(--ink);letter-spacing:-.01em}
+#foot .text{flex:1;font:400 28px/1.4 Roboto;color:#ECECF4;padding-right:20px}
+#foot.nostep .step{display:none}
+#foot.nostep .text{font-size:29px}
+</style></head><body>
+<div id="top"><span class="day"></span><span class="time"></span><span class="title"></span><span class="who"><i></i><b></b></span><span class="elapsed">ELAPSED<span></span></span></div>
+<div id="prog"></div>
+<div id="foot"><div class="step"><div class="n"></div><div class="s"></div></div><div class="text"></div></div>
+<script>
+const $ = s => document.querySelector(s);
+const COLORS = { rob: ['#54C7EE', 'Rob · API platform lead'], ines: ['#B669FB', 'Ines · Payments squad'], both: ['#7588FB', 'Kestrel Charging'] };
+window.setChrome = o => {
+  $('#top .day').textContent = o.day || ''; $('#top .time').textContent = o.time || ''; $('#top .title').textContent = o.title || '';
+  const c = COLORS[o.who || 'both']; $('#top .who i').style.background = c[0]; $('#top .who b').textContent = c[1]; $('#top .who b').style.fontWeight = 500;
+  const p = $('#prog'); p.innerHTML = ''; for (let i = 0; i < (o.stepTotal || 0); i++) { const e = document.createElement('i'); if (i < (o.stepIndex || 0) - 1) e.className = 'on'; else if (i === (o.stepIndex || 0) - 1) e.className = 'cur'; p.appendChild(e); }
+  const f = $('#foot'); f.classList.toggle('nostep', !o.step);
+  $('#foot .step .n').textContent = o.step ? `Step ${o.stepIndex} of ${o.stepTotal}` : ''; $('#foot .step .s').textContent = o.step || '';
+  const t = $('#foot .text'); t.textContent = o.text || ''; t.style.fontSize = ''; 
+  let fs = parseFloat(getComputedStyle(t).fontSize); while (t.scrollHeight > 156 && fs > 20) { fs -= 1; t.style.fontSize = fs + 'px'; }
+};
+</script></body></html>

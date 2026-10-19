@@ -1,0 +1,51 @@
+# Helm values for tyk-helm/tyk-stack (chart 5.4.1): Dashboard + Gateway + Operator, nothing else.
+# Licence keys are passed by scripts/up.sh with --set so they never live in this file.
+global:
+  license:
+    dashboard: ""
+    operator: ""
+  adminUser:
+    firstName: Rob
+    lastName: Whitfield
+    email: rob.whitfield@kestrelcharging.example
+    password: "kestrel-demo-2026"
+  components:
+    bootstrap: true      # creates the org, the admin user and the tyk-operator-conf secret
+    pump: false          # no analytics needed for governance
+    devPortal: false
+    operator: true
+  redis:
+    addrs: ["tyk-redis.tyk.svc:6379"]
+    pass: ""
+  postgres:
+    host: tyk-postgres.tyk.svc
+    port: 5432
+    user: postgres
+    password: tyk
+    database: tyk_analytics
+    sslmode: disable
+  storageType: postgres
+
+tyk-dashboard:
+  dashboard:
+    image:
+      tag: v5.15.0       # governance shipped in 5.15.0; the chart default is older
+    service:
+      type: NodePort
+
+tyk-gateway:
+  gateway:
+    image:
+      repository: tykio/tyk-gateway
+      tag: v5.15.0
+    service:
+      type: NodePort
+
+tyk-operator:
+  image:
+    tag: "v1.5.0"        # first release with TykRuleset and the governance preflight
+  webhooks:
+    enabled: true
+    # Fail: a preflight that cannot run (webhook or Dashboard unreachable) rejects the apply.
+    # The default, Ignore, admits the object and records the real state on the next reconcile.
+    governanceFailurePolicy: Fail
