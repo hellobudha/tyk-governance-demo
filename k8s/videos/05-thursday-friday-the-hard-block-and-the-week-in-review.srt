@@ -1,0 +1,184 @@
+1
+00:00:00,000 --> 00:00:01,699
+Thursday afternoon.
+
+2
+00:00:01,749 --> 00:00:02,549
+Rob.
+
+3
+00:00:05,789 --> 00:00:07,982
+The problem: warnings can be ignored,
+
+4
+00:00:08,032 --> 00:00:11,255
+and some standards must never
+be broken in production.
+
+5
+00:00:11,305 --> 00:00:16,226
+This part shows the Kubernetes API server
+itself refusing a change that breaks the
+
+6
+00:00:16,276 --> 00:00:18,348
+rules, and then the week in review.
+
+7
+00:00:19,521 --> 00:00:20,321
+Thursday.
+
+8
+00:00:20,079 --> 00:00:24,925
+Warnings can be ignored, and some standards
+must never be broken in production.
+
+9
+00:00:24,975 --> 00:00:28,582
+This is the one place where
+governance can say no outright,
+
+10
+00:00:28,632 --> 00:00:31,619
+and it is a capability
+only the Tyk Operator has.
+
+11
+00:00:32,786 --> 00:00:36,876
+For the payments category, Rob
+decides that warnings aren't enough.
+
+12
+00:00:36,926 --> 00:00:40,646
+He changes one word in the
+ruleset: the action becomes block.
+
+13
+00:00:41,806 --> 00:00:42,637
+He applies it.
+
+14
+00:00:42,687 --> 00:00:44,777
+Then someone tries a bad rollback:
+
+15
+00:00:44,827 --> 00:00:48,617
+pushing Monday's insecure version
+of the payments spec again.
+
+16
+00:00:49,755 --> 00:00:52,515
+The Kubernetes API server
+refused the change.
+
+17
+00:00:52,565 --> 00:00:57,073
+The Tyk Operator's admission webhook
+checked it, found twenty-two errors,
+
+18
+00:00:57,123 --> 00:01:00,007
+and denied the request,
+listing the first five.
+
+19
+00:01:00,057 --> 00:01:02,380
+The insecure version was never stored,
+
+20
+00:01:02,430 --> 00:01:05,502
+so it never reached the
+Dashboard or the gateways.
+
+21
+00:01:06,656 --> 00:01:10,493
+The payments API is still running
+Tuesday's compliant version.
+
+22
+00:01:14,955 --> 00:01:17,623
+In the Dashboard the
+ruleset still shows warn.
+
+23
+00:01:17,673 --> 00:01:20,223
+Blocking is something
+only the cluster does,
+
+24
+00:01:20,273 --> 00:01:23,709
+so the Dashboard and the pipeline
+behave exactly as before.
+
+25
+00:01:25,085 --> 00:01:27,279
+Rob sets it back to warn for now.
+
+26
+00:01:28,448 --> 00:01:29,534
+Friday morning.
+
+27
+00:01:34,067 --> 00:01:34,867
+Friday.
+
+28
+00:01:34,532 --> 00:01:39,331
+The Kestrel Payments API is compliant
+and the partner launch is on track.
+
+29
+00:01:39,381 --> 00:01:41,324
+Rob never reviewed it by hand.
+
+30
+00:01:42,471 --> 00:01:46,911
+Everything lives in the cluster
+as code: the rulesets, the APIs,
+
+31
+00:01:46,961 --> 00:01:49,437
+and a governance status on each one.
+
+32
+00:01:54,219 --> 00:01:58,642
+And the Dashboard turns the estate's
+compliance into a number anyone can read.
+
+33
+00:02:00,044 --> 00:02:01,257
+The week in review.
+
+34
+00:02:01,307 --> 00:02:04,383
+Monday, Rob defined the
+standard once, as code.
+
+35
+00:02:04,433 --> 00:02:06,710
+Tuesday, Ines found out on her own,
+
+36
+00:02:06,760 --> 00:02:10,168
+fixed her API with the
+instructions in front of her,
+
+37
+00:02:10,218 --> 00:02:13,891
+and handed one bad rule back
+to Rob, who fixed the rule.
+
+38
+00:02:13,941 --> 00:02:17,482
+Wednesday, the same check
+moved into the pull request.
+
+39
+00:02:17,532 --> 00:02:21,738
+Thursday, the rules that matter
+most became impossible to break.
+
+40
+00:02:21,788 --> 00:02:27,257
+And on Friday, compliance is a number on a
+screen instead of a queue on Rob's desk.

@@ -1,0 +1,166 @@
+1
+00:00:00,000 --> 00:00:01,373
+Tuesday morning.
+
+2
+00:00:01,423 --> 00:00:02,223
+Ines.
+
+3
+00:00:05,792 --> 00:00:10,113
+The problem: developers usually hear
+about standards in a review meeting,
+
+4
+00:00:10,163 --> 00:00:11,970
+days after they wrote the code.
+
+5
+00:00:12,020 --> 00:00:16,760
+This part shows Ines finding out on her
+own, with the fix next to every failure.
+
+6
+00:00:17,924 --> 00:00:18,833
+Tuesday morning.
+
+7
+00:00:18,883 --> 00:00:22,851
+Normally Ines would hear about Rob's
+standards in a review meeting,
+
+8
+00:00:22,901 --> 00:00:24,650
+days after she wrote the code.
+
+9
+00:00:24,700 --> 00:00:29,447
+Instead the platform worked it out overnight,
+and the answer is waiting for her,
+
+10
+00:00:29,497 --> 00:00:30,526
+with instructions.
+
+11
+00:00:35,037 --> 00:00:35,859
+Ines logs in.
+
+12
+00:00:35,909 --> 00:00:41,091
+The home page tells her three APIs are
+non-compliant, and offers to show them.
+
+13
+00:00:45,145 --> 00:00:50,742
+The API list now carries a compliance
+summary for the whole estate: three APIs,
+
+14
+00:00:50,792 --> 00:00:51,815
+none compliant.
+
+15
+00:00:52,961 --> 00:00:55,132
+Every API shows its own status,
+
+16
+00:00:55,182 --> 00:00:59,001
+so anyone can see the state
+of the estate at a glance.
+
+17
+00:00:59,051 --> 00:01:00,577
+Hers is non-compliant.
+
+18
+00:01:10,885 --> 00:01:14,608
+On her API's Governance tab is
+the verdict: non-compliant,
+
+19
+00:01:14,658 --> 00:01:17,665
+with twenty-five errors
+and seventeen warnings.
+
+20
+00:01:18,828 --> 00:01:22,162
+Each ruleset gets its own
+card with a compliance score.
+
+21
+00:01:22,212 --> 00:01:26,038
+Rob's platform standards give her
+twenty-five out of a hundred.
+
+22
+00:01:26,088 --> 00:01:28,560
+The OWASP baseline gives her forty-three.
+
+23
+00:01:35,641 --> 00:01:37,856
+She filters the list to Rob's rules.
+
+24
+00:01:37,906 --> 00:01:42,888
+Each row names the rule that failed and
+the problem it causes if it isn't fixed:
+
+25
+00:01:42,938 --> 00:01:46,411
+no authentication, no rate
+limit, missing operation IDs.
+
+26
+00:01:50,932 --> 00:01:54,682
+Opening an issue shows the
+rule, the ruleset it came from,
+
+27
+00:01:54,732 --> 00:01:56,975
+and the part of the API it affects.
+
+28
+00:01:58,118 --> 00:02:02,202
+And here is how to fix it, in Rob's
+own words, written yesterday.
+
+29
+00:02:02,252 --> 00:02:07,290
+This is the difference between being told
+no, and being told what to do instead.
+
+30
+00:02:11,358 --> 00:02:14,582
+Ines lives in the terminal,
+so she checks there too.
+
+31
+00:02:14,632 --> 00:02:19,492
+The same verdict is recorded on the
+Kubernetes resource itself: status warned,
+
+32
+00:02:19,542 --> 00:02:22,892
+twenty-three errors, and the
+first few of them inline.
+
+33
+00:02:24,076 --> 00:02:27,329
+Every evaluation is also
+recorded as a Kubernetes event,
+
+34
+00:02:27,379 --> 00:02:32,284
+so the alerting and audit tools the team
+already runs pick it up with no extra work.
+
+35
+00:02:33,445 --> 00:02:36,215
+Twenty-five errors sounds
+like a bad morning.
+
+36
+00:02:36,265 --> 00:02:41,229
+It is Tuesday, she has until Friday, and
+every one of them tells her what to do.

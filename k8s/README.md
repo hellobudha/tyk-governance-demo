@@ -54,7 +54,8 @@ Everything lives in one `kind` cluster called `kestrel`, namespace `tyk`:
 | `05-thursday-friday-the-hard-block-and-the-week-in-review.mp4` | `action: block`, and the week in review |
 
 Each opens with the day and what the part is about, keeps a running timer, and explains every step in a
-footer below the screen. [recording/](recording/README.md) re-creates them.
+footer below the screen. [videos/TRANSCRIPTS.md](videos/TRANSCRIPTS.md) has the timestamped narration and on-screen
+text for all five, and each video has a matching `.srt` subtitle file. [recording/](recording/README.md) re-creates them.
 
 ## Prerequisites
 

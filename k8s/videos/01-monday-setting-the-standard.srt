@@ -1,0 +1,416 @@
+1
+00:00:00,000 --> 00:00:02,170
+Monday morning at Kestrel Charging.
+
+2
+00:00:05,795 --> 00:00:10,142
+The problem: every new API waits for
+one person to review it by hand,
+
+3
+00:00:10,192 --> 00:00:14,603
+and the standards live on a wiki page
+nobody reads before they deploy.
+
+4
+00:00:14,653 --> 00:00:17,854
+This part shows Rob turning
+the standard into code,
+
+5
+00:00:17,904 --> 00:00:21,614
+so the cluster checks every API
+against it on every change.
+
+6
+00:00:22,776 --> 00:00:27,501
+This is Kestrel Charging, a fictional
+network of electric vehicle chargers.
+
+7
+00:00:27,551 --> 00:00:32,531
+Right now every new API waits for Rob,
+the platform lead, to review it by hand:
+
+8
+00:00:32,581 --> 00:00:35,015
+about two hours each, six in the queue.
+
+9
+00:00:35,065 --> 00:00:39,536
+The standards live on a wiki page
+that nobody reads before they deploy.
+
+10
+00:00:39,586 --> 00:00:43,420
+In this series we replace that
+queue with Tyk API Governance,
+
+11
+00:00:43,470 --> 00:00:46,986
+running entirely through the
+Tyk Operator on Kubernetes.
+
+12
+00:00:48,136 --> 00:00:49,082
+Why it matters.
+
+13
+00:00:49,132 --> 00:00:52,405
+In March, an API went live
+without authentication.
+
+14
+00:00:52,455 --> 00:00:56,259
+A bot scraped it and took a
+system down for forty minutes.
+
+15
+00:00:56,309 --> 00:01:01,242
+Rob wrote that lesson down afterwards,
+but a document cannot stop a deploy.
+
+16
+00:01:02,401 --> 00:01:04,088
+Two people carry the story.
+
+17
+00:01:04,138 --> 00:01:07,241
+Ines is a backend engineer
+on the payments squad.
+
+18
+00:01:07,291 --> 00:01:10,522
+She has to ship the Kestrel
+Payments API by Friday,
+
+19
+00:01:10,572 --> 00:01:14,381
+because a partner with nine
+hundred vans launches on Monday.
+
+20
+00:01:14,431 --> 00:01:16,890
+Rob owns the cluster and the standards.
+
+21
+00:01:16,940 --> 00:01:21,908
+Watch how the work passes between them:
+Rob sets the rules, Ines follows them,
+
+22
+00:01:21,958 --> 00:01:26,605
+and when a rule turns out to be wrong,
+Rob changes the rule, not her API.
+
+23
+00:01:27,765 --> 00:01:30,439
+Kestrel's APIs are Kubernetes resources.
+
+24
+00:01:30,489 --> 00:01:32,959
+Each one is a Tyk OAS API definition.
+
+25
+00:01:33,009 --> 00:01:37,453
+The Tyk Operator watches them and
+keeps the Tyk Dashboard in sync,
+
+26
+00:01:37,503 --> 00:01:40,314
+and the Dashboard configures the gateways.
+
+27
+00:01:41,467 --> 00:01:46,476
+The last column, preflight status, is
+the governance verdict for each API.
+
+28
+00:01:46,526 --> 00:01:50,919
+Right now every API says skipped,
+because no standard exists yet.
+
+29
+00:01:50,969 --> 00:01:56,046
+Nothing is checking these APIs, including
+the one Ines pushed this morning.
+
+30
+00:01:57,252 --> 00:01:58,939
+Here is her API definition.
+
+31
+00:01:58,989 --> 00:02:02,349
+The Tyk section at the bottom
+configures the gateway:
+
+32
+00:02:02,399 --> 00:02:04,794
+a listen path and an upstream address.
+
+33
+00:02:04,844 --> 00:02:07,689
+There is no authentication
+and no rate limit.
+
+34
+00:02:07,739 --> 00:02:11,743
+That is exactly the mistake from
+March, and nobody has noticed.
+
+35
+00:02:16,185 --> 00:02:17,763
+The Tyk Dashboard agrees.
+
+36
+00:02:17,813 --> 00:02:22,777
+Its Governance Overview shows three APIs:
+none compliant, none non-compliant.
+
+37
+00:02:22,827 --> 00:02:27,986
+Everything is not applicable, because
+there is nothing to be compliant with yet.
+
+38
+00:02:29,378 --> 00:02:30,918
+Half past nine.
+
+39
+00:02:30,968 --> 00:02:31,768
+Rob.
+
+40
+00:02:34,984 --> 00:02:36,674
+Rob's hands on the keyboard.
+
+41
+00:02:36,724 --> 00:02:41,148
+He writes the standard as a Tyk ruleset,
+which is a Kubernetes resource.
+
+42
+00:02:41,198 --> 00:02:44,690
+A ruleset is a named list of
+rules that APIs must follow.
+
+43
+00:02:44,740 --> 00:02:49,786
+Because it is a manifest, it lives in Git
+and gets reviewed like any other change.
+
+44
+00:02:50,955 --> 00:02:53,656
+He doesn't write the rules from scratch.
+
+45
+00:02:53,706 --> 00:02:57,233
+This ruleset extends the
+OWASP API Security ruleset,
+
+46
+00:02:57,283 --> 00:03:01,841
+a widely used set of API security
+checks, and includes all of them.
+
+47
+00:03:02,990 --> 00:03:07,721
+It is bound to a category, payments,
+rather than to Ines's API by name.
+
+48
+00:03:07,771 --> 00:03:10,213
+Every API tagged payments is checked,
+
+49
+00:03:10,263 --> 00:03:13,648
+including the two her squad
+will ship next quarter.
+
+50
+00:03:14,804 --> 00:03:18,781
+The action says what happens when
+an API breaks an error-level rule.
+
+51
+00:03:18,831 --> 00:03:20,735
+Warn means the developer is told,
+
+52
+00:03:20,785 --> 00:03:23,934
+in the Dashboard and in the
+terminal when they deploy.
+
+53
+00:03:23,984 --> 00:03:25,059
+Nothing is blocked.
+
+54
+00:03:25,109 --> 00:03:27,546
+We'll see the stricter option on Thursday.
+
+55
+00:03:28,698 --> 00:03:33,074
+Rob applies it, exactly the way he
+deploys anything else on the cluster.
+
+56
+00:03:34,225 --> 00:03:38,798
+The Tyk Operator created the ruleset in
+the Dashboard and wrote the Dashboard's
+
+57
+00:03:38,848 --> 00:03:40,788
+identifier back onto the resource.
+
+58
+00:03:40,838 --> 00:03:42,543
+The sync status is Successful.
+
+59
+00:03:46,997 --> 00:03:48,967
+In the Dashboard, under Governance,
+
+60
+00:03:49,017 --> 00:03:53,470
+the same ruleset appears with its payments
+category and the deployment warning
+
+61
+00:03:53,520 --> 00:03:54,320
+switched on.
+
+62
+00:03:54,212 --> 00:03:56,586
+Rob never opened this screen to create it.
+
+63
+00:04:02,209 --> 00:04:06,800
+Opening it lists every rule the template
+brought in, each with a severity.
+
+64
+00:04:06,850 --> 00:04:10,123
+Error-level rules decide
+whether an API is compliant.
+
+65
+00:04:10,173 --> 00:04:11,503
+Warnings are advisory.
+
+66
+00:04:12,875 --> 00:04:15,424
+Now the part generic linters can't do.
+
+67
+00:04:15,474 --> 00:04:19,322
+March's outage was gateway
+configuration, not API design.
+
+68
+00:04:19,372 --> 00:04:24,657
+Rob writes custom rules in the same format
+that look inside x-tyk-api-gateway,
+
+69
+00:04:24,707 --> 00:04:26,503
+Tyk's own gateway settings.
+
+70
+00:04:26,553 --> 00:04:30,196
+This one checks the upstream
+section for a rate limit.
+
+71
+00:04:31,347 --> 00:04:36,409
+At error severity, an API without an
+upstream rate limit cannot be compliant.
+
+72
+00:04:37,561 --> 00:04:40,058
+And every rule carries how-to-fix text.
+
+73
+00:04:40,108 --> 00:04:43,846
+That text is what developers
+will see next to the failure,
+
+74
+00:04:43,896 --> 00:04:47,569
+so the standard arrives with
+instructions, not just a no.
+
+75
+00:04:48,739 --> 00:04:52,211
+The second ruleset loads
+those rules from a ConfigMap,
+
+76
+00:04:52,261 --> 00:04:56,320
+so one file serves the cluster,
+the Dashboard and the pipeline.
+
+77
+00:04:56,370 --> 00:05:01,473
+It covers both payments and internal APIs,
+and its action is none: report only.
+
+78
+00:05:01,523 --> 00:05:06,234
+Rob wants to see how the existing APIs
+measure up before he warns anyone.
+
+79
+00:05:07,417 --> 00:05:11,902
+He applies it, and within seconds
+every tagged API has been evaluated.
+
+80
+00:05:11,952 --> 00:05:13,716
+All three are non-compliant.
+
+81
+00:05:13,766 --> 00:05:18,640
+Ines's payments API scores twenty-five
+out of a hundred against Rob's rules,
+
+82
+00:05:18,690 --> 00:05:21,426
+and forty-three against
+the OWASP baseline.
+
+83
+00:05:22,565 --> 00:05:24,967
+And Rob learns something he didn't know.
+
+84
+00:05:25,017 --> 00:05:28,705
+The tariffs API from the March
+incident is authenticated now,
+
+85
+00:05:28,755 --> 00:05:31,586
+but it still has no rate
+limit on its upstream.
+
+86
+00:05:36,436 --> 00:05:40,686
+Two rulesets, two commits, about
+fifteen minutes of Rob's time.
+
+87
+00:05:40,736 --> 00:05:43,280
+One warns developers when they deploy.
+
+88
+00:05:43,330 --> 00:05:44,850
+The other only reports.
+
+89
+00:05:44,900 --> 00:05:47,240
+Rob has not opened Ines's API once,
+
+90
+00:05:47,290 --> 00:05:50,653
+and tomorrow morning she
+will find out on her own.

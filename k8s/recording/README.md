@@ -14,6 +14,7 @@ footer are composed around that capture afterwards with ffmpeg, so they never co
 | `stage.html` | Animated slate (day slides in while a clock ticks through the story time), problem slide, openers (flow, stats, cast), quote and week-recap cards, terminal and file views. Tyk colours, Inter and Roboto. |
 | `overlay.js` | Injected into Dashboard pages: highlight box with dimmed surroundings, visible cursor. |
 | `fonts/` | Inter, Roboto and Roboto Mono embedded as data URIs, plus a TTF for ffmpeg's timer. |
+| `transcripts.js` | Rebuilds `../videos/TRANSCRIPTS.md` and the `.srt` subtitle files, timed against the speech in each recorded video. Run it after re-recording. |
 
 Requires macOS (for `say` and `afinfo`) and the stack from `../scripts/up.sh`.
 
@@ -23,6 +24,7 @@ npm install
 PLAYWRIGHT_BROWSERS_PATH=$PWD/browsers npx playwright install chromium
 ../scripts/reset.sh && ../scripts/seed.sh            # parts must start from Monday's state
 PLAYWRIGHT_BROWSERS_PATH=$PWD/browsers node record.js   # all five parts, in order; or e.g. node record.js 03
+node transcripts.js                                     # refresh transcripts and subtitles
 ```
 
 Parts change cluster state in sequence, so record a single part only from the state it starts in (part 02,

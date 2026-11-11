@@ -1,0 +1,108 @@
+1
+00:00:00,000 --> 00:00:01,012
+Wednesday.
+
+2
+00:00:01,062 --> 00:00:01,862
+Ines.
+
+3
+00:00:05,801 --> 00:00:10,289
+The problem: even a warning at apply
+time arrives after the code is merged.
+
+4
+00:00:10,339 --> 00:00:13,859
+This part shows the same check
+running in the pull request,
+
+5
+00:00:13,909 --> 00:00:16,340
+with exit codes the pipeline understands.
+
+6
+00:00:17,505 --> 00:00:18,305
+Wednesday.
+
+7
+00:00:18,120 --> 00:00:21,885
+Even a warning at apply time
+arrives after the code is merged.
+
+8
+00:00:21,935 --> 00:00:26,745
+Ines wants the answer in the pull request,
+before anything reaches the cluster.
+
+9
+00:00:27,918 --> 00:00:32,293
+She adds this script, taken from the
+Tyk documentation, to her pipeline.
+
+10
+00:00:32,343 --> 00:00:37,456
+It sends the spec to the Dashboard's sandbox
+endpoint and asks for a verdict against
+
+11
+00:00:37,506 --> 00:00:38,624
+the payments rules.
+
+12
+00:00:38,674 --> 00:00:40,407
+Nothing is saved or deployed.
+
+13
+00:00:41,552 --> 00:00:46,792
+If any gating rule fails, the script exits
+with code two, which fails the build.
+
+14
+00:00:46,842 --> 00:00:49,040
+Warnings on their own let it pass.
+
+15
+00:00:50,212 --> 00:00:53,271
+Here it runs against Monday's
+version of her spec.
+
+16
+00:00:53,321 --> 00:00:57,312
+It finds the same errors Ines read
+on Tuesday, each with its fix,
+
+17
+00:00:57,362 --> 00:00:58,805
+and exits with code two.
+
+18
+00:00:58,855 --> 00:01:03,281
+The pull request would have failed
+before Rob even knew the API existed.
+
+19
+00:01:04,421 --> 00:01:08,723
+And against the fixed version:
+zero errors, exit code zero.
+
+20
+00:01:08,773 --> 00:01:10,493
+The pipeline carries on.
+
+21
+00:01:11,654 --> 00:01:12,547
+The pull request,
+
+22
+00:01:12,597 --> 00:01:16,594
+the cluster and the Dashboard all use
+the same rules and the same engine.
+
+23
+00:01:16,644 --> 00:01:18,812
+The answer is the same wherever you ask,
+
+24
+00:01:18,862 --> 00:01:21,972
+and that is what makes it safe
+to move the check earlier.
